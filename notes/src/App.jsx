@@ -1,23 +1,41 @@
-import { useState } from 'react'
-import {Header} from './components/Header'
-
+import { useState, useEffect } from 'react';
+import {Header} from './components/Header';
+import Note from './components/Note';
+import CreateArea from './components/CreateArea';
+import './App.css';
 function App() {
-const [isExpanded, setIsExpanded] = useState(false);
+
 const [title, setTitle] = useState("");
 const [content, setContent] = useState("");
-const [notes, setNotesList] = useState([]);
+
 const [editIndex, setEditIndex] = useState(null);
 
-const submitNote = () =>{
-  const newNote ={
-    title: title,
-    content: content
-  };
+const [notes, setNotesList] = useState(() => {
+  const savedNotes = localStorage.getItem("myNotes");
+  return savedNotes ? JSON.parse(savedNotes) : [];
+});
+
+useEffect(() => {
+  localStorage.setItem("myNotes", JSON.stringify(notes));
+}, [notes]);
+
+
+
+// const submitNote = () =>{
+//   const newNote ={
+//     title: title,
+//     content: content
+//   };
     
-  setNotesList([...notes, newNote]);
-  resetForm();
-};
+//   setNotesList([...notes, newNote]);
+//   resetForm();
+// };
    
+const submitNote = (newNote) => {
+  setNotesList(prevNotes => {
+    return [...prevNotes, newNote];
+  });
+};
 const deleteNote = (id) => {
   setNotesList(prevNotes => {
     return prevNotes.filter((noteItem, index) => {
@@ -57,57 +75,49 @@ function resetForm(){
   setContent("");
   setIsExpanded(false);
 }
-const cancel = () => {
-  resetForm();
-};
+
   return (
     
-    <div>
+    <div >
       <Header/>
-      {isExpanded && (
-      <input 
-        placeholder="Title" 
-        value={title} 
-        onChange={(e) => setTitle(e.target.value)} 
-      />
-        )}
+      <CreateArea onAdd={submitNote} /> 
 
-      <textarea type="text" value={content} 
-      onClick={() => setIsExpanded(true)}
-      onChange={(e)=> setContent(e.target.value)} 
-      placeholder='Take a note...'/>
-
-      <button onClick={submitNote}>Save</button>
-      <button onClick={cancel}>Cancel</button>  
+    <div className="notes-container"> 
 
       {notes.map((note, index) => (
-  <div key={index} style={{ border: "1px solid #ccc", margin: "10px" }}>
+  <div key={index}  className='notes-wrapper'>
     {editIndex === index ? (
       <>
         <input 
-          value={title} 
+          value={title}
+          placeholder="Title"
           onChange={(e) => setTitle(e.target.value)} 
         />
         <textarea 
           value={content} 
+          placeholder='Take a note...'
           onChange={(e) => setContent(e.target.value)} 
+          
         />
-        <button onClick={saveEdit}>Save</button>
+        <button  onClick={props.onSave(tempTitle, tempContent) && saveEdit}>Save</button>
         <button onClick={() => {
           setEditIndex(null);
           resetForm();
         }}>Cancel</button>
       </>
     ) : (
-      <>
-        <h1>{note.title}</h1>
-        <p>{note.content}</p>
-        <button onClick={() => deleteNote(index)}>Delete</button>
-        <button onClick={() => startEdit(index, note)}>Edit</button>
-      </>
+      <Note
+        key={index}
+        id={index}
+        title={note.title}
+        content={note.content}
+        onDelete={deleteNote}
+        onEdit={()=> startEdit(index, note)}
+      />
     )}
   </div>
 ))}
+    </div>
     </div>
   );
 }

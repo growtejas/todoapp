@@ -1,0 +1,191 @@
+/* Overall Page Style
+body {
+  background-color: #f1f3f4;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+} */
+
+/* The "Take a Note" Area */
+/* .create-note {
+  background: #fff;
+  width: 100%;
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+input, textarea {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1.1rem;
+  padding: 10px 0;
+}
+
+.title-input { font-weight: bold; font-size: 1.2rem; }
+.content-input { resize: none; } */
+
+/* The Note Cards Grid */
+/* .notes-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+  gap: 15px;
+}
+
+.note-card {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 15px;
+  width: 240px;
+  min-height: 100px;
+  transition: box-shadow 0.2s;
+}
+
+.note-card:hover {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.note-card h1 { font-size: 1.1rem; margin-top: 0; }
+.note-card p { font-size: 1rem; color: #3c4043; white-space: pre-wrap; } */
+
+/* Buttons */
+/* .button-container, .note-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.save-btn { color: #fbbc04; }
+.save-btn:hover { background: #fff8e1; }
+.cancel-btn, .delete-btn, .edit-btn { color: #5f6368; }
+.delete-btn:hover { color: #d93025; background: #fce8e6; } */
+
+.create-note {
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 7px;
+  box-shadow: 0 1px 5px rgb( 138, 137, 137);
+  width: 480px;
+  margin: 30px auto;
+  padding: 15px;
+}
+
+.create-note input{
+  width: 100%;
+  border: none;
+  padding: 4px;
+  outline: none;
+  font-size: 1.2re;
+
+}
+
+.create-note textarea{
+  width: 100%;
+  border: none;
+  padding: 4px;
+  outline: none;
+  font-size: 1.2re;
+  resize: none;
+  field-sizing: content;
+  
+}
+
+.button-container{
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  
+}
+
+.note-card{
+  background: #fff;
+  width: 240px;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px #e0e0e0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease;
+
+  margin: 10px;
+  position: relative;
+  min-height: 120px;
+
+}
+
+.note-card h1{
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 0;
+}
+
+.note-card p {
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  color: #3c4043;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  overflow: hidden;
+}
+
+.note-card:hover{
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+
+}
+
+.notes-container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+  gap: 20px;
+}
+
+.note-btns-wrapper{
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  
+  display: flex;
+  gap: 10px;
+  
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.note-card:hover .note-btns-wrapper {
+  opacity: 1;
+}
+
+.note-btns-wrapper button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #5f6368;
+  font-size: 0.8rem;
+}
