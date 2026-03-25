@@ -1,7 +1,11 @@
-import { useContext } from "react";
-import { CountContext } from "./CountContext";  
+import { useContext, useState } from "react";
+import { CountContext } from "./CountContext";
+
 function Buttons(){
+    const [hide, setHide] = useState(false);
     const {increment, decrement, reset} = useContext (CountContext);
+
+    
     return(
         <>
       <button onClick={increment}>Increment </button> 

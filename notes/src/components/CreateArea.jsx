@@ -47,8 +47,7 @@ function CreateArea(props) {
       onChange={(e)=> setContent(e.target.value)} 
       placeholder='Take a note...'
       rows={isExpanded ? 3 : 1}/>
-
-      
+ 
     {isExpanded && (
      <div className="button-container">
       <button onClick={submitLocalNote} > <SaveOff>Save</SaveOff></button>
