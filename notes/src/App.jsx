@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import {Header} from './components/Header';
 import Note from './components/Note';
 import CreateArea from './components/CreateArea';
+import {AllContext } from './components/AllContext'
 import './App.css';
 function App() {
 
@@ -106,14 +107,14 @@ function resetForm(){
         }}>Cancel</button>
       </>
     ) : (
-      <Note
+       <Note
         key={index}
         id={index}
         title={note.title}
         content={note.content}
         onDelete={deleteNote}
         onEdit={()=> startEdit(index, note)}
-      />
+      /> 
     )}
   </div>
 ))}
@@ -123,3 +124,4 @@ function resetForm(){
 }
 
 export default App
+//xd
