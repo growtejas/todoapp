@@ -1,11 +1,15 @@
-export function Header() {
+export function Header({ filterText, onSearch }) {
 
 
   return (
     
-    <div>
-      <header>
-        <h3>Smart Note</h3>
+    <div >
+      <header className="header">
+        <h3 className="header h3">Smart Note</h3>
+
+        <div className="filter-note">
+        <input type="search" value={filterText} onChange={onSearch} placeholder="Search notes..."/>
+        </div>
       </header>
     
     </div>

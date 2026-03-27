@@ -1,14 +1,25 @@
-function Note(props){
+import { useContext } from "react";
+import { NotesContext } from "./NotesContext";
+
+
+function Note({ title, content, id }){
+    const { deleteNote, startEdit } = useContext(NotesContext);
     return(
         <div className="note-card">
-            <h1>{props.title}</h1>
-            <p>{props.content}</p>
+            <h1>{title}</h1>
+            <p>{content}</p>
 
             <div className="note-btns-wrapper">
-                <button onClick={()=>{props.onDelete(props.id)}}>
+                <button onClick={() => deleteNote(id)}>
                     Delete
                 </button>
-                <button onClick={props.onEdit}>Edit</button>  
+
+                <button onClick={() => startEdit(id, {
+                    title: title,
+                    content: content
+                    })}>
+                    Edit
+                </button> 
             </div>
 
         </div>

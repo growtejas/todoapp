@@ -1,18 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {Edit, SaveOff, Delete} from "lucide-react";
 
-function cancel(){
-        setTitle("");
-        setContent("");
-        setIsExpanded(false);
-    }
+import { NotesContext } from "./NotesContext";
 
-function CreateArea(props) {
+
+  
+
+function CreateArea() {
   // Keep your states here
   const [isExpanded, setIsExpanded] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-
+  const { submitNote } = useContext(NotesContext);
   // The Logic Function
   function submitLocalNote(event) {
     // Logic - Package the title and content
@@ -23,7 +22,7 @@ function CreateArea(props) {
 
 
     // Logic- Send it to the App.jsx
-    props.onAdd(newNote);
+    submitNote(newNote);
 
     // Logic - Clear the inputs
     setTitle("");
@@ -32,7 +31,11 @@ function CreateArea(props) {
     // Prevent the page from refreshing 
     event.preventDefault();
   }
-
+      function cancel(){
+        setTitle("");
+        setContent("");
+        setIsExpanded(false);
+      }
   return (
     <form className="create-note">
     {isExpanded && (

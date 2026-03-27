@@ -1,127 +1,146 @@
-import { useState, useEffect } from 'react';
-import {Header} from './components/Header';
-import Note from './components/Note';
-import CreateArea from './components/CreateArea';
-import {AllContext } from './components/AllContext'
-import './App.css';
+import { useState, useEffect } from "react";
+import { Header } from "./components/Header";
+import Note from "./components/Note";
+import CreateArea from "./components/CreateArea";
+import { NotesContext } from "./components/NotesContext";
+import "./App.css";
 function App() {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
 
-const [title, setTitle] = useState("");
-const [content, setContent] = useState("");
+  const [editIndex, setEditIndex] = useState(null);
+  const [filterText, setFilterText] = useState("");
 
-const [editIndex, setEditIndex] = useState(null);
-
-const [notes, setNotesList] = useState(() => {
-  const savedNotes = localStorage.getItem("myNotes");
-  return savedNotes ? JSON.parse(savedNotes) : [];
-});
-
-useEffect(() => {
-  localStorage.setItem("myNotes", JSON.stringify(notes));
-}, [notes]);
-
-
-
-// const submitNote = () =>{
-//   const newNote ={
-//     title: title,
-//     content: content
-//   };
-    
-//   setNotesList([...notes, newNote]);
-//   resetForm();
-// };
-   
-const submitNote = (newNote) => {
-  setNotesList(prevNotes => {
-    return [...prevNotes, newNote];
+  const [notes, setNotesList] = useState(() => {
+    const savedNotes = localStorage.getItem("myNotes");
+    return savedNotes ? JSON.parse(savedNotes) : [];
   });
-};
-const deleteNote = (id) => {
-  setNotesList(prevNotes => {
-    return prevNotes.filter((noteItem, index) => {
-      return index !== id; 
-    });        
-  });
-};
 
-const startEdit = (index, note) => {
-  setEditIndex(index);
+  useEffect(() => {
+    localStorage.setItem("myNotes", JSON.stringify(notes));
+  }, [notes]);
 
-  setTitle(note.title);
-  setContent(note.content);
-}
+  // const submitNote = () =>{
+  //   const newNote ={
+  //     title: title,
+  //     content: content
+  //   };
 
-const saveEdit = () =>{
-  const updateNotes = notes.map((note, index) => {
-    if(index === editIndex){
-      return{  
-        title: title,
-        content: content  
+  //   setNotesList([...notes, newNote]);
+  //   resetForm();
+  // };
+    function handleChange(e) {
+    setFilterText(e.target.value);
+    } 
+  
+      const filteredNotes = notes.filter((note) =>{
+        return (
+          note.title.toLowerCase().includes(filterText.toLowerCase()) ||
+          note.content.toLowerCase().includes(filterText.toLowerCase())
+        );
+      });
+  
+
+  const submitNote = (newNote) => {
+    setNotesList((prevNotes) => {
+      return [...prevNotes, newNote];
+    });
+  };
+  const deleteNote = (id) => {
+    setNotesList((prevNotes) => {
+      return prevNotes.filter((noteItem, index) => {
+        return index !== id;
+      });
+    });
+  };
+
+  const startEdit = (index, note) => {
+    setEditIndex(index);
+
+    setTitle(note.title);
+    setContent(note.content);
+  };
+
+  const saveEdit = () => {
+    const updateNotes = notes.map((note, index) => {
+      if (index === editIndex) {
+        return {
+          title: title,
+          content: content,
+        };
+      } else {
+        return note;
       }
-    }else{
-      return note;
-    }
-  });
+    });
 
-setNotesList(updateNotes);
+    setNotesList(updateNotes);
 
-  setEditIndex(null);
+    setEditIndex(null);
 
-  setTitle("");
-  setContent("");
-}
-function resetForm(){
-  setTitle("");
-  setContent("");
-  setIsExpanded(false);
-}
+    setTitle("");
+    setContent("");
+  };
+  function resetForm() {
+    setTitle("");
+    setContent("");
+    setIsExpanded(false);
+  }
 
   return (
-    
-    <div >
-      <Header/>
-      <CreateArea onAdd={submitNote} /> 
+    <div>
 
-    <div className="notes-container"> 
+      <NotesContext.Provider
+        value={{
+          notes,
+          submitNote,
+          deleteNote,
+          startEdit,
+          saveEdit,
+        }}
+      >
+        <Header filterText={filterText} onSearch={handleChange} />
+  
+        
+        <CreateArea />
 
-      {notes.map((note, index) => (
-  <div key={index}  className='notes-wrapper'>
-    {editIndex === index ? (
-      <>
-        <input 
-          value={title}
-          placeholder="Title"
-          onChange={(e) => setTitle(e.target.value)} 
-        />
-        <textarea 
-          value={content} 
-          placeholder='Take a note...'
-          onChange={(e) => setContent(e.target.value)} 
-          
-        />
-        <button  onClick={props.onSave(tempTitle, tempContent) && saveEdit}>Save</button>
-        <button onClick={() => {
-          setEditIndex(null);
-          resetForm();
-        }}>Cancel</button>
-      </>
-    ) : (
-       <Note
-        key={index}
-        id={index}
-        title={note.title}
-        content={note.content}
-        onDelete={deleteNote}
-        onEdit={()=> startEdit(index, note)}
-      /> 
-    )}
-  </div>
-))}
-    </div>
+        <div className="notes-container">
+          {filteredNotes.map((note, index) => (
+            <div key={index} className="notes-wrapper">
+              <Note id={index} title={note.title} content={note.content} />
+            </div>
+          ))}
+        </div>
+
+        {editIndex !== null && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <input
+                value={title}
+                placeholder="Title"
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <textarea
+                value={content}
+                placeholder="Take a note..."
+                onChange={(e) => setContent(e.target.value)}
+              />
+              <button onClick={saveEdit}>Save</button>
+              <button
+                onClick={() => {
+                  setEditIndex(null);
+                  resetForm();
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </NotesContext.Provider>
     </div>
   );
 }
 
-export default App
+export default App;
 //xd
