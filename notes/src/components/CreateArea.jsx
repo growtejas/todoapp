@@ -32,10 +32,13 @@ function CreateArea() {
     event.preventDefault();
   }
       function cancel(){
+
         setTitle("");
         setContent("");
         setIsExpanded(false);
       }
+
+
   return (
     <form className="create-note">
     {isExpanded && (

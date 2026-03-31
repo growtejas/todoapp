@@ -3,6 +3,7 @@ import { Header } from "./components/Header";
 import Note from "./components/Note";
 import CreateArea from "./components/CreateArea";
 import { NotesContext } from "./components/NotesContext";
+import Draggable from "react-draggable";
 import "./App.css";
 function App() {
   const [title, setTitle] = useState("");
@@ -12,10 +13,18 @@ function App() {
   const [editIndex, setEditIndex] = useState(null);
   const [filterText, setFilterText] = useState("");
 
+  const [loading, setLoading] = useState(true);
+
   const [notes, setNotesList] = useState(() => {
     const savedNotes = localStorage.getItem("myNotes");
     return savedNotes ? JSON.parse(savedNotes) : [];
   });
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("myNotes", JSON.stringify(notes));
@@ -30,17 +39,16 @@ function App() {
   //   setNotesList([...notes, newNote]);
   //   resetForm();
   // };
-    function handleChange(e) {
+  function handleChange(e) {
     setFilterText(e.target.value);
-    } 
-  
-      const filteredNotes = notes.filter((note) =>{
-        return (
-          note.title.toLowerCase().includes(filterText.toLowerCase()) ||
-          note.content.toLowerCase().includes(filterText.toLowerCase())
-        );
-      });
-  
+  }
+
+  const filteredNotes = notes.filter((note) => {
+    return ( 
+      note.title.toLowerCase().includes(filterText.toLowerCase()) ||
+      note.content.toLowerCase().includes(filterText.toLowerCase())
+    );
+  });
 
   const submitNote = (newNote) => {
     setNotesList((prevNotes) => {
@@ -49,7 +57,7 @@ function App() {
   };
   const deleteNote = (id) => {
     setNotesList((prevNotes) => {
-      return prevNotes.filter((noteItem, index) => {
+      return prevNotes.filter((note0Item, index) => {
         return index !== id;
       });
     });
@@ -89,58 +97,66 @@ function App() {
 
   return (
     <div>
+      {/* <Draggable>
+      <div className="card">
+        <h3>Drag Me</h3>
+      </div>
+    </Draggable> */}
+      {loading ? (
+        <p className="load">Loading...</p>
+      ) : (
+        <NotesContext.Provider
+          value={{
+            notes,
+            submitNote,
+            deleteNote,
+            startEdit,
+            saveEdit,
+          }}
+        >
+          <Header filterText={filterText} onSearch={handleChange} />
 
-      <NotesContext.Provider
-        value={{
-          notes,
-          submitNote,
-          deleteNote,
-          startEdit,
-          saveEdit,
-        }}
-      >
-        <Header filterText={filterText} onSearch={handleChange} />
-  
-        
-        <CreateArea />
-
-        <div className="notes-container">
-          {filteredNotes.map((note, index) => (
-            <div key={index} className="notes-wrapper">
-              <Note id={index} title={note.title} content={note.content} />
+          <CreateArea />
+          {notes.length === 0 ? (
+            <p className="nonote">No notes available</p>
+          ) : (
+            <div className="notes-container">
+              {filteredNotes.map((note, index) => (
+                <div key={index} className="notes-wrapper">
+                  <Note id={index} title={note.title} content={note.content} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-
-        {editIndex !== null && (
-          <div className="modal-overlay">
-            <div className="modal">
-              <input
-                value={title}
-                placeholder="Title"
-                onChange={(e) => setTitle(e.target.value)}
-              />
-              <textarea
-                value={content}
-                placeholder="Take a note..."
-                onChange={(e) => setContent(e.target.value)}
-              />
-              <button onClick={saveEdit}>Save</button>
-              <button
-                onClick={() => {
-                  setEditIndex(null);
-                  resetForm();
-                }}
-              >
-                Cancel
-              </button>
+          )}
+          {editIndex !== null && (
+            <div className="modal-overlay">
+              <div className="modal">
+                <input
+                  value={title}
+                  placeholder="Title"
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+                <textarea
+                  value={content}
+                  placeholder="Take a note..."
+                  onChange={(e) => setContent(e.target.value)}
+                />
+                <button onClick={saveEdit}>Save</button>
+                <button
+                  onClick={() => {
+                    setEditIndex(null);
+                    resetForm();
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
-          </div>
-        )}
-      </NotesContext.Provider>
+          )}
+        </NotesContext.Provider>
+      )}
     </div>
   );
 }
 
 export default App;
-//xd

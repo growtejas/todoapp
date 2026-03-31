@@ -1,1 +1,19 @@
-hello
+
+Task 1: Search Notes
+
+User types → notes get filtered
+
+👉 Focus:
+
+derived data
+filtering
+
+
+
+🧩 Task 2: Toggle Dark Mode
+
+User clicks button → theme changes
+
+👉 Focus:
+
+toggle state
