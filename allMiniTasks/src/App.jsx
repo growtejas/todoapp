@@ -13,6 +13,8 @@ function App() {
     }
   }
 
+  const arr = ['a','b','c'];
+  const newarr = arr.map(ar => ar.toUpperCase());
   return (
     <div>
       <input 
@@ -31,6 +33,10 @@ function App() {
           <li key={index}>{item}</li>
         })}
       </ul>
+
+        <h2>{arr}</h2>
+        <h2>{newarr}</h2>
+
     </div>
   )
 }

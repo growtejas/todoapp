@@ -14,6 +14,7 @@ function App() {
   const [filterText, setFilterText] = useState("");
 
   const [loading, setLoading] = useState(true);
+  const [isPin, setIsPin] = useState([]);
 
   const [notes, setNotesList] = useState(() => {
     const savedNotes = localStorage.getItem("myNotes");
@@ -43,12 +44,7 @@ function App() {
     setFilterText(e.target.value);
   }
 
-  const filteredNotes = notes.filter((note) => {
-    return ( 
-      note.title.toLowerCase().includes(filterText.toLowerCase()) ||
-      note.content.toLowerCase().includes(filterText.toLowerCase())
-    );
-  });
+  
 
   const submitNote = (newNote) => {
     setNotesList((prevNotes) => {
@@ -63,6 +59,31 @@ function App() {
     });
   };
 
+  const pinNote = (id) => {
+    setIsPin((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((pid) => pid !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
+  };
+
+  
+
+  const pinnedItems = notes.filter((note, index) => isPin.includes(index));
+
+  const unpinnedItems = notes.filter((note, index) => !isPin.includes(index));
+  
+  const filteredNotes = notes.filter((note) => {
+  return (
+    note.title.toLowerCase().includes(filterText.toLowerCase()) ||
+    note.content.toLowerCase().includes(filterText.toLowerCase())
+  );
+});
+
+  const finalNotes = [...pinnedItems, ...unpinnedItems];
+  
   const startEdit = (index, note) => {
     setEditIndex(index);
 
@@ -112,6 +133,7 @@ function App() {
             deleteNote,
             startEdit,
             saveEdit,
+            pinNote
           }}
         >
           <Header filterText={filterText} onSearch={handleChange} />
@@ -121,7 +143,7 @@ function App() {
             <p className="nonote">No notes available</p>
           ) : (
             <div className="notes-container">
-              {filteredNotes.map((note, index) => (
+              {finalNotes.map((note, index) => (
                 <div key={index} className="notes-wrapper">
                   <Note id={index} title={note.title} content={note.content} />
                 </div>

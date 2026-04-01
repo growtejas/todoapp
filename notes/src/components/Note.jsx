@@ -3,12 +3,12 @@ import { NotesContext } from "./NotesContext";
 
 
 function Note({ title, content, id }){
-    const { deleteNote, startEdit } = useContext(NotesContext);
+    const { deleteNote, startEdit, pinNote } = useContext(NotesContext);
     return(
         <div className="note-card">
             <h1>{title}</h1>
             <p>{content}</p>
-
+            
             <div className="note-btns-wrapper">
                 <button onClick={() => deleteNote(id)}>
                     Delete
@@ -20,6 +20,8 @@ function Note({ title, content, id }){
                     })}>
                     Edit
                 </button> 
+
+                <button onClick={() => pinNote(id)}>Pin</button>
             </div>
 
         </div>
