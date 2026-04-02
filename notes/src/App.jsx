@@ -10,11 +10,12 @@ function App() {
   const [content, setContent] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const [editIndex, setEditIndex] = useState(null);
+  const [editId, setEditId] = useState(null);
   const [filterText, setFilterText] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [isPin, setIsPin] = useState([]);
+  //const [theme, setTheme] = useState("light");
 
   const [notes, setNotesList] = useState(() => {
     const savedNotes = localStorage.getItem("myNotes");
@@ -31,6 +32,17 @@ function App() {
     localStorage.setItem("myNotes", JSON.stringify(notes));
   }, [notes]);
 
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "light";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
   // const submitNote = () =>{
   //   const newNote ={
   //     title: title,
@@ -44,11 +56,15 @@ function App() {
     setFilterText(e.target.value);
   }
 
-  
-
   const submitNote = (newNote) => {
     setNotesList((prevNotes) => {
-      return [...prevNotes, newNote];
+      return [
+        ...prevNotes,
+        {
+          id: Date.now(),
+          ...newNote,
+        },
+      ];
     });
   };
   const deleteNote = (id) => {
@@ -69,31 +85,30 @@ function App() {
     });
   };
 
-  
-
-  const pinnedItems = notes.filter((note, index) => isPin.includes(index));
-
-  const unpinnedItems = notes.filter((note, index) => !isPin.includes(index));
-  
   const filteredNotes = notes.filter((note) => {
-  return (
-    note.title.toLowerCase().includes(filterText.toLowerCase()) ||
-    note.content.toLowerCase().includes(filterText.toLowerCase())
-  );
-});
+    return (
+      note.title.toLowerCase().includes(filterText.toLowerCase()) ||
+      note.content.toLowerCase().includes(filterText.toLowerCase())
+    );
+  });
 
+  const pinnedItems = filteredNotes.filter((note) => isPin.includes(note.id));
+
+  const unpinnedItems = filteredNotes.filter(
+    (note) => !isPin.includes(note.id),
+  );
   const finalNotes = [...pinnedItems, ...unpinnedItems];
-  
-  const startEdit = (index, note) => {
-    setEditIndex(index);
+
+  const startEdit = (id, note) => {
+    setEditId(id);
 
     setTitle(note.title);
     setContent(note.content);
   };
 
   const saveEdit = () => {
-    const updateNotes = notes.map((note, index) => {
-      if (index === editIndex) {
+    const updateNotes = notes.map((note) => {
+      if (note.id === editId) {
         return {
           title: title,
           content: content,
@@ -105,7 +120,7 @@ function App() {
 
     setNotesList(updateNotes);
 
-    setEditIndex(null);
+    setEditId(null);
 
     setTitle("");
     setContent("");
@@ -116,67 +131,80 @@ function App() {
     setIsExpanded(false);
   }
 
+  console.log("isPin:", isPin);
+
   return (
-    <div>
-      {/* <Draggable>
+    <div className={theme}>
+      <div>
+        {/* <Draggable>
       <div className="card">
         <h3>Drag Me</h3>
       </div>
     </Draggable> */}
-      {loading ? (
-        <p className="load">Loading...</p>
-      ) : (
-        <NotesContext.Provider
-          value={{
-            notes,
-            submitNote,
-            deleteNote,
-            startEdit,
-            saveEdit,
-            pinNote
-          }}
-        >
-          <Header filterText={filterText} onSearch={handleChange} />
+        {loading ? (
+          <p className="load">Loading...</p>
+        ) : (
+          <NotesContext.Provider
+            value={{
+              notes,
+              submitNote,
+              deleteNote,
+              startEdit,
+              saveEdit,
+              pinNote,
+            }}
+          >
+            <Header
+              filterText={filterText}
+              onSearch={handleChange}
+              toggleTheme={toggleTheme}
+            />
 
-          <CreateArea />
-          {notes.length === 0 ? (
-            <p className="nonote">No notes available</p>
-          ) : (
-            <div className="notes-container">
-              {finalNotes.map((note, index) => (
-                <div key={index} className="notes-wrapper">
-                  <Note id={index} title={note.title} content={note.content} />
-                </div>
-              ))}
-            </div>
-          )}
-          {editIndex !== null && (
-            <div className="modal-overlay">
-              <div className="modal">
-                <input
-                  value={title}
-                  placeholder="Title"
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                <textarea
-                  value={content}
-                  placeholder="Take a note..."
-                  onChange={(e) => setContent(e.target.value)}
-                />
-                <button onClick={saveEdit}>Save</button>
-                <button
-                  onClick={() => {
-                    setEditIndex(null);
-                    resetForm();
-                  }}
-                >
-                  Cancel
-                </button>
+            <CreateArea />
+            {notes.length === 0 ? (
+              <p className="nonote">No notes available</p>
+            ) : (
+              <div className="notes-container">
+                {finalNotes.map((note, index) => (
+                  <div key={index} className="notes-wrapper">
+                    <Note
+                      id={note.id}
+                      title={note.title}
+                      content={note.content}
+                      isPinned={isPin.includes(note.id)}
+                    />
+                  </div>
+                ))}
               </div>
-            </div>
-          )}
-        </NotesContext.Provider>
-      )}
+            )}
+            {editId !== null && (
+              <div className="modal-overlay">
+                <div className="modal">
+                  <input
+                    value={title}
+                    placeholder="Title"
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                  <textarea
+                    value={content}
+                    placeholder="Take a note..."
+                    onChange={(e) => setContent(e.target.value)}
+                  />
+                  <button onClick={saveEdit}>Save</button>
+                  <button
+                    onClick={() => {
+                      setEditIndex(null);
+                      resetForm();
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+          </NotesContext.Provider>
+        )}
+      </div>
     </div>
   );
 }
