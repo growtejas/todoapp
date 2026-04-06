@@ -1,8 +1,38 @@
+/* 
+@tailwind base;
+@tailwind components;
+@tailwind utilities; */
 
+/* @import "tailwindcss";
+
+@import "tw-animate-css";
+
+@import "shadcn/tailwind.css";
+
+@import "@fontsource-variable/geist"; */
+
+@custom-variant dark (&:is(.dark *));
 body {
-  background-color: #eaeaec;
+  background-color: rgb(224, 224, 224);
   font-family: 'Arial', sans-serif;
   margin: 0;
+  min-height: 100vh;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+html {
+  min-height: 100%;
+}
+
+.light,
+.dark {
+  min-height: 100vh;
+  width: 100%;
 }
 
 .create-note {
@@ -43,22 +73,57 @@ body {
   font-size: 1.2re;
   resize: none;
   field-sizing: content;
-  
+  background: transparent;
+  box-shadow: none;
 }
 
 .button-container{
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  
+}
+
+.create-note .button-container button {
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.create-note .button-container button:hover {
+  transform: translateY(-1px);
+}
+
+.create-note .button-container button:first-child {
+  background-color: #6b7280;
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(107, 114, 128, 0.18);
+}
+
+.create-note .button-container button:first-child:hover {
+  background-color: #4b5563;
+}
+
+.create-note .button-container button:last-child {
+  background-color: transparent;
+  color: #4b5563;
+  border: 1px solid rgba(75, 85, 99, 0.3);
+}
+
+.create-note .button-container button:last-child:hover {
+  background-color: rgba(75, 85, 99, 0.08);
 }
 
 .note-card{
   background: #fff;
+  color: #202124;
   width: 240px;
   padding: 15px;
   border-radius: 8px;
-  border: 1px #e0e0e0;
+  border: 1px solid #e0e0e0;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transition: box-shadow 0.3s ease;
 
@@ -66,7 +131,6 @@ body {
   position: relative;
   min-height: 120px;
   overflow: hidden;
-
 }
 
 .note-card h1{
@@ -75,6 +139,7 @@ body {
   margin-top: 0;
   word-break: break-word;
   overflow-wrap: break-word;
+  color: #181818;
 }
 
 .note-card p {
@@ -83,8 +148,25 @@ body {
   color: #3c4043;
   overflow-wrap: break-word;
   word-wrap: break-word;
-
   overflow: hidden;
+}
+
+.dark .note-card {
+  background: #1f1f1f;
+  color: #f1f1f1;
+  border-color: #2e2e2e;
+}
+
+.dark .note-card h1 {
+  color: #ffffff;
+}
+
+.dark .note-card p {
+  color: #d3d3d3;
+}
+
+.dark .note-btns-wrapper button {
+  color: #d8d8d8;
 }
 
 .note-card:hover{
@@ -104,10 +186,10 @@ body {
   position: absolute;
   right: 10px;
   bottom: 10px;
-  
+
   display: flex;
   gap: 10px;
-  
+
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
 }
@@ -132,7 +214,7 @@ body {
   height: 100%;
 
   background: rgba(0, 0, 0, 0.5); 
-  
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -177,6 +259,48 @@ body {
   cursor: pointer;
 }
 
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.modal-buttons .btn-save,
+.modal .btn-save {
+  padding: 10px 18px;
+  border-radius: 6px;
+  background-color: #6b7280;
+  color: white;
+  border: none;
+  font-weight: 700;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-buttons .btn-save:hover,
+.modal .btn-save:hover {
+  background-color: #4b5563;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(75, 85, 99, 0.2);
+}
+
+.modal-buttons .btn-cancel,
+.modal .btn-cancel {
+  padding: 10px 18px;
+  border-radius: 6px;
+  background: transparent;
+  color: #4b5563;
+  border: 1px solid rgba(75, 85, 99, 0.25);
+  font-weight: 700;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.modal-buttons .btn-cancel:hover,
+.modal .btn-cancel:hover {
+  background-color: rgba(75, 85, 99, 0.08);
+  transform: translateY(-1px);
+}
+
 .modal {
   animation: popup 0.2s ease;
 }
@@ -193,38 +317,141 @@ body {
 }
 
 .filter-note {
-  background-color: #fff;
-  border-radius: 7px;
-  box-shadow: 0 1px 5px rgb(138, 137, 137);
-
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   flex: 1;
-  max-width: 500px;
+  max-width: 400px;
+  padding: 10px 16px;
+  border: none;
+  transition: all 0.3s ease;
+}
 
-  padding: 8px 15px;
+.filter-note:focus-within {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
 }
 
 .filter-note input {
   width: 100%;
   border: none;
   outline: none;
-
-  font-size: 1rem;
+  font-size: 0.95rem;
   background: transparent;
+  color: #262626;
+  font-family: inherit;
+}
+
+.filter-note input::placeholder {
+  color: #999;
+}
+
+/* Toggle Theme Button */
+header.header > button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: rgb(0, 0, 0);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+}
+
+header.header > button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+header.header > button:active {
+  transform: translateY(0);
+}
+
+/* Header Styles */
+header.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 24px;
+  background: rgb(224, 224, 224);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
 }
 
 .header h3 {
   border: none;
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  font-size: x-large;
+  color: rgb(0, 0, 0);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
   white-space: nowrap;
+  margin: 0;
+  letter-spacing: -0.5px;
 }
-.header {
+
+/* Left section (title + search) */
+.header > div:first-of-type {
   display: flex;
   align-items: center;
-  gap: 40px;
-  
-  padding: 0px 10px;
-  border-bottom: 2px solid #000000;
+  gap: 20px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Responsive Header */
+@media (max-width: 768px) {
+  header.header {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .header h3 {
+    font-size: 1.2rem;
+  }
+
+  .filter-note {
+    max-width: 100%;
+    flex: 1;
+  }
+
+  header.header > button {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header.header {
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .header h3 {
+    font-size: 1.1rem;
+    flex-basis: 100%;
+  }
+
+  .header > div:first-of-type {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .filter-note {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  header.header > button {
+    width: 100%;
+    padding: 10px;
+  }
 }
 
 .pinned {
@@ -238,8 +465,8 @@ body {
   font-weight: bold;
 }
 
-.light{
-  background-color: #ffffff;
+.light {
+  background-color: rgb(224, 224, 224);
   color: #000000;
 }
 
@@ -248,11 +475,72 @@ body {
   color: #ffffff;
 }
 
-.dark .note-card {
-  background-color: #1e1e1e;
-  color: white;
+/* Dark mode overrides for header and form elements */
+.dark header.header {
+  background: #1f1f1f;
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.08);
 }
 
-.light .note-card {
-  background-color: #fff;
+.dark .header h3 {
+  color: #ffffff;
+}
+
+.dark header.header > button {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.dark .filter-note {
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+}
+
+.dark .filter-note input {
+  color: #ffffff;
+}
+
+.dark .create-note {
+  background: #1d1d1d;
+  border-color: #0e0e0e;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
+}
+
+.dark .create-note input,
+.dark .create-note textarea,
+.dark .modal input,
+.dark .modal textarea {
+  color: #f5f5f5;
+  background-color: #1d1d1d;
+  border: none;
+  box-shadow: none;
+}
+
+.dark .create-note textarea,
+.dark .modal textarea {
+  background-color: transparent;
+  caret-color: #ffffff;
+}
+
+.dark .modal {
+  background: #191919;
+  border: 1px solid #333333;
+}
+
+.dark .note-card {
+  background: #1f1f1f;
+  color: #f1f1f1;
+  border-color: #2e2e2e;
+}
+
+.dark .note-card h1 {
+  color: #ffffff;
+}
+
+.dark .note-card p {
+  color: #d3d3d3;
+}
+
+.dark .note-btns-wrapper button {
+  color: #d8d8d8;
 }

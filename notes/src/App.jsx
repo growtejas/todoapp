@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Header } from "./components/Header";
 import Note from "./components/Note";
 import CreateArea from "./components/CreateArea";
+import EditModal from "./components/EditModal";
 import { NotesContext } from "./components/NotesContext";
-import Draggable from "react-draggable";
 import "./App.css";
 function App() {
   const [title, setTitle] = useState("");
@@ -14,12 +14,23 @@ function App() {
   const [filterText, setFilterText] = useState("");
 
   const [loading, setLoading] = useState(true);
-  const [isPin, setIsPin] = useState([]);
-  //const [theme, setTheme] = useState("light");
 
   const [notes, setNotesList] = useState(() => {
     const savedNotes = localStorage.getItem("myNotes");
-    return savedNotes ? JSON.parse(savedNotes) : [];
+    if (!savedNotes) return [];
+    
+    const parsedNotes = JSON.parse(savedNotes);
+    // Ensure all notes have IDs (for backward compatibility)
+    return parsedNotes.map((note) => ({
+      id: note.id || Date.now() + Math.random(),
+      title: note.title || "",
+      content: note.content || "",
+    }));
+  });
+
+  const [isPin, setIsPin] = useState(() => {
+    const savedPins = localStorage.getItem("pinnedNotes");
+    return savedPins ? JSON.parse(savedPins) : [];
   });
 
   useEffect(() => {
@@ -31,6 +42,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem("myNotes", JSON.stringify(notes));
   }, [notes]);
+
+  useEffect(() => {
+    localStorage.setItem("pinnedNotes", JSON.stringify(isPin));
+  }, [isPin]);
 
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("theme") || "light";
@@ -69,9 +84,7 @@ function App() {
   };
   const deleteNote = (id) => {
     setNotesList((prevNotes) => {
-      return prevNotes.filter((note0Item, index) => {
-        return index !== id;
-      });
+      return prevNotes.filter((note) => note.id !== id);
     });
   };
 
@@ -110,6 +123,7 @@ function App() {
     const updateNotes = notes.map((note) => {
       if (note.id === editId) {
         return {
+          id: note.id,
           title: title,
           content: content,
         };
@@ -119,11 +133,8 @@ function App() {
     });
 
     setNotesList(updateNotes);
-
+    resetForm();
     setEditId(null);
-
-    setTitle("");
-    setContent("");
   };
   function resetForm() {
     setTitle("");
@@ -158,6 +169,7 @@ function App() {
               filterText={filterText}
               onSearch={handleChange}
               toggleTheme={toggleTheme}
+              theme={theme}
             />
 
             <CreateArea />
@@ -177,30 +189,19 @@ function App() {
                 ))}
               </div>
             )}
+            
             {editId !== null && (
-              <div className="modal-overlay">
-                <div className="modal">
-                  <input
-                    value={title}
-                    placeholder="Title"
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                  <textarea
-                    value={content}
-                    placeholder="Take a note..."
-                    onChange={(e) => setContent(e.target.value)}
-                  />
-                  <button onClick={saveEdit}>Save</button>
-                  <button
-                    onClick={() => {
-                      setEditIndex(null);
-                      resetForm();
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
+              <EditModal
+                title={title}
+                content={content}
+                onTitleChange={(e) => setTitle(e.target.value)}
+                onContentChange={(e) => setContent(e.target.value)}
+                onSave={saveEdit}
+                onCancel={() => {
+                  setEditId(null);
+                  resetForm();
+                }}
+              />
             )}
           </NotesContext.Provider>
         )}

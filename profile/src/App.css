@@ -1,0 +1,60 @@
+body{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  background-color: rgb(241, 235, 219);
+}
+.header{
+  padding: 5px 30px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 100;   /* Bold for headers */
+  font-size: 1.5rem;  /* Adjust size as needed */
+  color: #333;
+}
+.profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
+  /* Control the global gap between ALL items here */
+  gap: 10px; 
+}
+
+.profile-image {
+  width: 250px;         
+  height: 250px;         
+  border-radius: 50%;    
+  object-fit: cover;
+  border: 3px solid #ccc; 
+  /* Force the bottom margin to 0 so it doesn't push the H1 away */
+  margin-bottom: 0 !important; 
+}
+
+.profile-container h1 {
+  font-family: Impact, sans-serif;
+  font-size: 4rem;
+  color: #000000;
+  /* Remove margins entirely to let the 'gap' above do the work */
+  margin: 0; 
+  padding: 0;
+  line-height: 1; /* This prevents invisible 'air' above/below the letters */
+}
+
+.profile-container h4 {
+  font-family: Impact, sans-serif;
+  color: #333;
+  /* This is likely the culprit - force it to 0 */
+  margin: 0; 
+  padding: 0;
+}
+
+.social-links-container {
+  display: flex;
+  flex-direction: row;     /* This moves them side-by-side */
+  justify-content: center; /* Centers the whole row horizontally */
+  align-items: center;     /* Aligns icons perfectly in the middle */
+  gap: 20px;               /* Adds space between each icon */
+  margin-top: 15px;        /* Adds space below your h4 text */
+}
