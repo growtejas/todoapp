@@ -1,12 +1,16 @@
-import { useState } from 'react'
-import './App.css'
-
+import { usePostsController } from "./controllers/usePostsController";
+import PostList from "./PostList";
+import './App.css';
 function App() {
-  const [count, setCount] = useState(0)
+  const { data, loading } = usePostsController();
+
+  if (loading) return <p>Loading...</p>;
 
   return (
-    <div>Hello</div> 
-  )
+    <div className="app">
+      <PostList posts={data} />
+    </div>
+  );
 }
 
-export default App
+export default App;

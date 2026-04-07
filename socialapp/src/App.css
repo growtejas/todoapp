@@ -1,0 +1,110 @@
+/* ===== BASE ===== */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #909497;
+  color: #1f1f1f;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ===== POST LIST ===== */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ===== POST CARD ===== */
+.post-card {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+  transition: all 0.2s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* ===== USER NAME ===== */
+.post-user {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #5f6368;
+  margin-bottom: 6px;
+}
+
+/* ===== TITLE ===== */
+.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 6px 0;
+}
+
+/* ===== BODY ===== */
+.post-body {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.5;
+}
+
+/* ===== COMMENTS SECTION ===== */
+.comments {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+/* ===== COMMENT ===== */
+.comment {
+  background: #f8f9fa;
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin-top: 6px;
+
+  font-size: 0.85rem;
+  color: #333;
+}
+
+/* ===== LOADING ===== */
+.loading {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 1rem;
+  color: #666;
+}
+
+/* ===== DARK MODE ===== */
+.dark {
+  background-color: #121212;
+  color: #e4e4e4;
+}
+
+.dark .post-card {
+  background: #1e1e1e;
+  border-color: #2a2a2a;
+}
+
+.dark .post-user {
+  color: #aaa;
+}
+
+.dark .post-body {
+  color: #ccc;
+}
+
+.dark .comment {
+  background: #2a2a2a;
+  color: #ddd;
+}
